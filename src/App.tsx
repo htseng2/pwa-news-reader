@@ -1,19 +1,7 @@
-import { useEffect, useState } from "react";
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Container,
-  Card,
-  CardContent,
-  CardMedia,
-  CircularProgress,
-  Box,
-} from "@mui/material";
-import Grid from "@mui/material/Grid";
+import NewsFeed from "./components/NewsFeed";
 
 // Define TypeScript interface for news articles
-interface NewsArticle {
+export interface NewsArticle {
   title: string;
   description: string;
   urlToImage: string;
@@ -24,90 +12,8 @@ interface NewsArticle {
   };
 }
 
-const API_KEY = import.meta.env.VITE_NEWS_API_KEY;
-
 function App() {
-  const [articles, setArticles] = useState<NewsArticle[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchNews = async () => {
-      try {
-        const response = await fetch(
-          `https://newsapi.org/v2/top-headlines?country=us&apiKey=${API_KEY}`
-        );
-        const data = await response.json();
-        setArticles(data.articles);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching news:", error);
-        setLoading(false);
-      }
-    };
-
-    fetchNews();
-  }, []);
-
-  return (
-    <>
-      <AppBar position="static">
-        <Toolbar>
-          <Typography variant="h6" component="div">
-            News Reader
-          </Typography>
-        </Toolbar>
-      </AppBar>
-
-      <Container sx={{ py: 4 }}>
-        {loading ? (
-          <Box display="flex" justifyContent="center" my={4}>
-            <CircularProgress />
-          </Box>
-        ) : (
-          <Grid container spacing={4}>
-            {articles.map((article, index) => (
-              <Grid item xs={12} sm={6} md={4} key={index}>
-                <Card
-                  sx={{
-                    height: "100%",
-                    display: "flex",
-                    flexDirection: "column",
-                  }}
-                >
-                  <CardMedia
-                    component="img"
-                    height="200"
-                    image={
-                      article.urlToImage ||
-                      "https://via.placeholder.com/300x200"
-                    }
-                    alt={article.title}
-                    sx={{ objectFit: "cover" }}
-                  />
-                  <CardContent sx={{ flexGrow: 1 }}>
-                    <Typography gutterBottom variant="h6" component="h2">
-                      {article.title}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {article.description}
-                    </Typography>
-                    <Typography
-                      variant="caption"
-                      color="text.secondary"
-                      sx={{ mt: 1, display: "block" }}
-                    >
-                      {article.source.name} •{" "}
-                      {new Date(article.publishedAt).toLocaleDateString()}
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        )}
-      </Container>
-    </>
-  );
+  return <NewsFeed />;
 }
 
 export default App;
