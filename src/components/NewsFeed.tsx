@@ -26,7 +26,7 @@ export default function NewsFeed() {
       try {
         setLoading(true);
         const response = await fetch(
-          `https://newsapi.org/v2/top-headlines?country=us&page=${page}&pageSize=10&apiKey=${API_KEY}`
+          `https://newsapi.org/v2/everything?q=news&page=${page}&pageSize=10&apiKey=${API_KEY}`
         );
         const data = await response.json();
 
