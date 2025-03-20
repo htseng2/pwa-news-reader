@@ -91,7 +91,9 @@ export default function NewsFeed() {
                       height: "100%",
                       display: "flex",
                       flexDirection: "column",
+                      cursor: "pointer",
                     }}
+                    onClick={() => window.open(article.url, "_blank")}
                   >
                     <CardMedia
                       component="img"
