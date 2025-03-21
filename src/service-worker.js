@@ -17,7 +17,7 @@ precacheAndRoute(self.__WB_MANIFEST);
 
 // Cache API responses
 registerRoute(
-  ({ url }) => url.origin === "https://newsapi.org",
+  ({ url }) => url.origin === "https://api.thenewsapi.com",
   new StaleWhileRevalidate({
     cacheName: "news-api-cache",
   })

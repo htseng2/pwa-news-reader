@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import { NewsArticle } from "../App";
 
-const API_KEY = import.meta.env.VITE_NEWS_API_KEY;
+const API_KEY = "vP9wOFQL8xVt541veHr0K23h1SHcyP8vJl8EOwJ3";
 
 export default function NewsFeed() {
   const [articles, setArticles] = useState<NewsArticle[]>([]);
@@ -26,15 +26,21 @@ export default function NewsFeed() {
       try {
         setLoading(true);
         const response = await fetch(
-          `https://newsapi.org/v2/everything?q=news&page=${page}&pageSize=10&apiKey=${API_KEY}`
+          `https://api.thenewsapi.com/v1/news/all?api_token=${API_KEY}&language=en&limit=3&page=${page}`
         );
         const data = await response.json();
 
-        if (data.articles.length === 0) {
+        if (data.error) {
+          console.error("API Error:", data.error.message);
+          return;
+        }
+
+        if (data.data?.length === 0) {
           setHasMore(false);
         } else {
+          const articles = data.data || [];
           setArticles((prev) =>
-            page === 1 ? data.articles : [...prev, ...data.articles]
+            page === 1 ? articles : [...prev, ...articles]
           );
         }
       } catch (error) {
@@ -98,10 +104,7 @@ export default function NewsFeed() {
                     <CardMedia
                       component="img"
                       height="200"
-                      image={
-                        article.urlToImage ||
-                        "https://via.placeholder.com/300x200"
-                      }
+                      image={article.image_url || "/fallback-news.png"}
                       alt={article.title}
                       sx={{ objectFit: "cover" }}
                     />
@@ -117,8 +120,8 @@ export default function NewsFeed() {
                         color="text.secondary"
                         sx={{ mt: 1, display: "block" }}
                       >
-                        {article.source.name} •{" "}
-                        {new Date(article.publishedAt).toLocaleDateString()}
+                        {article.source} •{" "}
+                        {new Date(article.published_at).toLocaleDateString()}
                       </Typography>
                     </CardContent>
                   </Card>
@@ -128,6 +131,9 @@ export default function NewsFeed() {
             {loading && hasMore && (
               <Box display="flex" justifyContent="center" my={4}>
                 <CircularProgress />
+                <Typography variant="body2" sx={{ ml: 2 }}>
+                  Loading 3 new articles...
+                </Typography>
               </Box>
             )}
           </>

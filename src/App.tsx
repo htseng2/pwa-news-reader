@@ -2,14 +2,14 @@ import NewsFeed from "./components/NewsFeed";
 
 // Define TypeScript interface for news articles
 export interface NewsArticle {
+  uuid: string;
   title: string;
   description: string;
-  urlToImage: string;
+  image_url: string;
   url: string;
-  publishedAt: string;
-  source: {
-    name: string;
-  };
+  published_at: string;
+  source: string;
+  categories: string[];
 }
 
 function App() {
