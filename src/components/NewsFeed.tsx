@@ -14,6 +14,7 @@ import {
 import { NewsArticle } from "../App";
 import Skeleton from "@mui/material/Skeleton";
 import ImageNotSupportedIcon from "@mui/icons-material/ImageNotSupported";
+import { buildVersion } from "../version";
 
 const API_KEY = "vP9wOFQL8xVt541veHr0K23h1SHcyP8vJl8EOwJ3";
 
@@ -147,8 +148,12 @@ export default function NewsFeed() {
         sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
       >
         <Toolbar>
-          <Typography variant="h6" component="div">
+          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             News Reader
+          </Typography>
+          <Typography variant="caption" color="inherit">
+            v{buildVersion.version} (
+            {buildVersion.timestamp.slice(0, 16).replace("T", " ")})
           </Typography>
         </Toolbar>
       </AppBar>
