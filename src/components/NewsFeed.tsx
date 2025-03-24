@@ -12,8 +12,55 @@ import {
   Container,
 } from "@mui/material";
 import { NewsArticle } from "../App";
+import Skeleton from "@mui/material/Skeleton";
+import ImageNotSupportedIcon from "@mui/icons-material/ImageNotSupported";
 
 const API_KEY = "vP9wOFQL8xVt541veHr0K23h1SHcyP8vJl8EOwJ3";
+
+const ImageWithFallback = ({ src, alt }: { src: string; alt: string }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [hasError, setHasError] = useState(false);
+
+  return (
+    <>
+      {!isLoaded && !hasError && (
+        <Skeleton variant="rectangular" width="100%" height={200} />
+      )}
+
+      {hasError ? (
+        <Box
+          sx={{
+            height: 200,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            bgcolor: "grey.200",
+            p: 2,
+          }}
+        >
+          <ImageNotSupportedIcon color="error" fontSize="large" />
+          <Typography variant="caption" color="text.secondary" sx={{ mt: 1 }}>
+            Image not available
+          </Typography>
+        </Box>
+      ) : (
+        <CardMedia
+          component="img"
+          height="200"
+          image={src}
+          alt={alt}
+          sx={{
+            objectFit: "cover",
+            display: isLoaded ? "block" : "none",
+          }}
+          onLoad={() => setIsLoaded(true)}
+          onError={() => setHasError(true)}
+        />
+      )}
+    </>
+  );
+};
 
 export default function NewsFeed() {
   const [articles, setArticles] = useState<NewsArticle[]>([]);
@@ -125,12 +172,9 @@ export default function NewsFeed() {
                     }}
                     onClick={() => window.open(article.url, "_blank")}
                   >
-                    <CardMedia
-                      component="img"
-                      height="200"
-                      image={article.image_url || "/fallback-news.png"}
+                    <ImageWithFallback
+                      src={article.image_url}
                       alt={article.title}
-                      sx={{ objectFit: "cover" }}
                     />
                     <CardContent sx={{ flexGrow: 1 }}>
                       <Typography gutterBottom variant="h6" component="h2">
