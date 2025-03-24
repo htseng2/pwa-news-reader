@@ -4,6 +4,7 @@ import { injectManifest } from "workbox-build";
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: "/pwa-news-reader/",
   plugins: [
     react(),
     {

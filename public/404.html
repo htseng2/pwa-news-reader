@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Redirecting...</title>
+    <script>
+      // Handles SPA routing for GitHub Pages
+      // Parse the current url path
+      const path = window.location.pathname;
+      // Get the pathname after the repository name
+      const repoName = "/pwa-news-reader";
+      const pathSegmentsToKeep = 1; // Modify this to match your repo name depth
+
+      // Strip the repository name from the path
+      let cleanPath = path;
+      if (path.indexOf(repoName) === 0) {
+        cleanPath = path.substr(repoName.length);
+      }
+
+      // Redirect to the index page with the path as a query parameter
+      const l = window.location;
+      const redirectUrl =
+        l.protocol +
+        "//" +
+        l.hostname +
+        (l.port ? ":" + l.port : "") +
+        repoName +
+        "/?path=" +
+        encodeURIComponent(cleanPath);
+
+      window.location.replace(redirectUrl);
+    </script>
+  </head>
+  <body>
+    <p>Redirecting to the app...</p>
+  </body>
+</html>
