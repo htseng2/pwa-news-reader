@@ -1,116 +1,29 @@
-import { useEffect, useState, useRef } from "react";
+import { useRef } from "react";
 import {
-  Grid,
-  Card,
-  CardContent,
   Box,
   CircularProgress,
-  Typography,
-  AppBar,
-  Toolbar,
   Container,
+  Grid,
+  Typography,
 } from "@mui/material";
-import { NewsArticle } from "../App";
-import { buildVersion } from "../version";
-import { ImageWithFallback } from "./ImageWithFallback";
-
-const API_KEY = "vP9wOFQL8xVt541veHr0K23h1SHcyP8vJl8EOwJ3";
+import { useNewsApi } from "../hooks/useNewsApi";
+import { useInfiniteScroll } from "../hooks/useInfiniteScroll";
+import { NewsHeader } from "./NewsHeader";
+import { NewsCard } from "./NewsCard";
 
 export default function NewsFeed() {
-  const [articles, setArticles] = useState<NewsArticle[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
+  const { articles, loading, hasMore, setPage } = useNewsApi();
   const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const fetchNews = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch(
-          `https://api.thenewsapi.com/v1/news/all?api_token=${API_KEY}&language=en&limit=3&page=${page}`
-        );
-        const data = await response.json();
-
-        if (data.error) {
-          console.error("API Error:", data.error.message);
-          return;
-        }
-
-        if (data.data?.length === 0) {
-          setHasMore(false);
-        } else {
-          const articles = data.data || [];
-          setArticles((prev) =>
-            page === 1 ? articles : [...prev, ...articles]
-          );
-        }
-      } catch (error) {
-        console.error("Error fetching news:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchNews();
-  }, [page]);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollThreshold = 200; // Trigger 200px before bottom
-      const nearBottom =
-        window.innerHeight + document.documentElement.scrollTop >=
-        document.documentElement.offsetHeight - scrollThreshold;
-
-      // Auto-load if screen isn't filled
-      const viewportFilled =
-        document.documentElement.offsetHeight > window.innerHeight * 1.5;
-
-      if ((nearBottom || !viewportFilled) && !loading && hasMore) {
-        setPage((prev) => prev + 1);
-      }
-    };
-
-    // Initial check when articles load
-    handleScroll();
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [loading, hasMore]);
-
-  // Auto-load when content doesn't fill viewport
-  useEffect(() => {
-    if (loading || !hasMore) return;
-
-    const checkContentHeight = () => {
-      const contentHeight = document.documentElement.offsetHeight;
-      const viewportHeight = window.innerHeight;
-
-      if (contentHeight < viewportHeight * 1.2) {
-        setPage((prev) => prev + 1);
-      }
-    };
-
-    const timeoutId = setTimeout(checkContentHeight, 500);
-    return () => clearTimeout(timeoutId);
-  }, [articles, loading, hasMore]);
+  useInfiniteScroll({
+    loading,
+    hasMore,
+    onLoadMore: () => setPage((prev) => prev + 1),
+  });
 
   return (
     <>
-      <AppBar
-        position="fixed"
-        sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
-      >
-        <Toolbar>
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            News Reader
-          </Typography>
-          <Typography variant="caption" color="inherit">
-            v{buildVersion.version} (
-            {buildVersion.timestamp.slice(0, 16).replace("T", " ")})
-          </Typography>
-        </Toolbar>
-      </AppBar>
-
+      <NewsHeader />
       <Container sx={{ pt: 12, pb: 4 }}>
         {loading && articles.length === 0 ? (
           <Box display="flex" justifyContent="center" my={4}>
@@ -120,38 +33,7 @@ export default function NewsFeed() {
           <>
             <Grid container spacing={4} ref={containerRef}>
               {articles.map((article, index) => (
-                <Grid item xs={12} sm={6} md={4} key={index}>
-                  <Card
-                    sx={{
-                      height: "100%",
-                      display: "flex",
-                      flexDirection: "column",
-                      cursor: "pointer",
-                    }}
-                    onClick={() => window.open(article.url, "_blank")}
-                  >
-                    <ImageWithFallback
-                      src={article.image_url}
-                      alt={article.title}
-                    />
-                    <CardContent sx={{ flexGrow: 1 }}>
-                      <Typography gutterBottom variant="h6" component="h2">
-                        {article.title}
-                      </Typography>
-                      <Typography variant="body2" color="text.secondary">
-                        {article.description}
-                      </Typography>
-                      <Typography
-                        variant="caption"
-                        color="text.secondary"
-                        sx={{ mt: 1, display: "block" }}
-                      >
-                        {article.source} •{" "}
-                        {new Date(article.published_at).toLocaleDateString()}
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Grid>
+                <NewsCard key={article.uuid || index} article={article} />
               ))}
             </Grid>
             {loading && hasMore && (
