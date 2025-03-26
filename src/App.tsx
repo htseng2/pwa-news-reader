@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import NewsFeed from "./components/NewsFeed";
+import { BookmarksProvider } from "./contexts/BookmarksContext";
 
 // Define TypeScript interface for news articles
 export interface NewsArticle {
@@ -31,10 +32,12 @@ function App() {
   }, [location, navigate]);
 
   return (
-    <Routes>
-      <Route path="/" element={<NewsFeed />} />
-      {/* Add more routes as needed */}
-    </Routes>
+    <BookmarksProvider>
+      <Routes>
+        <Route path="/" element={<NewsFeed />} />
+        {/* Add more routes as needed */}
+      </Routes>
+    </BookmarksProvider>
   );
 }
 
