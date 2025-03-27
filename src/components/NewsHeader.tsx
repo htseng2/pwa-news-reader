@@ -1,9 +1,29 @@
-import { AppBar, Toolbar, Typography, Tabs, Tab } from "@mui/material";
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  IconButton,
+  Menu,
+  MenuItem,
+  ListItemText,
+} from "@mui/material";
 import { buildVersion } from "../version";
 import { Link, useLocation } from "react-router-dom";
+import MenuIcon from "@mui/icons-material/Menu";
+import { useState } from "react";
 
 export function NewsHeader() {
   const location = useLocation();
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   return (
     <AppBar
@@ -11,33 +31,53 @@ export function NewsHeader() {
       sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
     >
       <Toolbar>
+        <IconButton
+          size="large"
+          edge="start"
+          color="inherit"
+          aria-label="menu"
+          sx={{ mr: 2 }}
+          onClick={handleClick}
+        >
+          <MenuIcon />
+        </IconButton>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           News Reader
         </Typography>
-        <Tabs
-          value={location.pathname}
-          textColor="inherit"
-          sx={{ minHeight: 64 }}
+
+        <Menu
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          PaperProps={{ sx: { minWidth: 200 } }}
         >
-          <Tab
-            label="News Feed"
-            value="/"
+          <MenuItem
             component={Link}
             to="/"
-            sx={{ minHeight: 64 }}
-          />
-          <Tab
-            label="Bookmarks"
-            value="/bookmarks"
+            selected={location.pathname === "/"}
+            onClick={handleClose}
+          >
+            <ListItemText>News Feed</ListItemText>
+          </MenuItem>
+          <MenuItem
             component={Link}
             to="/bookmarks"
-            sx={{ minHeight: 64 }}
-          />
-        </Tabs>
-        <Typography variant="caption" color="inherit">
-          v{buildVersion.version} (
-          {buildVersion.timestamp.slice(0, 16).replace("T", " ")})
-        </Typography>
+            selected={location.pathname === "/bookmarks"}
+            onClick={handleClose}
+          >
+            <ListItemText>Bookmarks</ListItemText>
+          </MenuItem>
+          <MenuItem
+            disabled
+            sx={{ mt: 2, borderTop: 1, borderColor: "divider" }}
+          >
+            <ListItemText
+              secondary={`v${buildVersion.version} (${buildVersion.timestamp
+                .slice(0, 16)
+                .replace("T", " ")})`}
+            />
+          </MenuItem>
+        </Menu>
       </Toolbar>
     </AppBar>
   );

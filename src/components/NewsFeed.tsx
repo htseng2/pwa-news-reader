@@ -8,7 +8,6 @@ import {
 } from "@mui/material";
 import { useNewsApi } from "../hooks/useNewsApi";
 import { useInfiniteScroll } from "../hooks/useInfiniteScroll";
-import { NewsHeader } from "./NewsHeader";
 import { NewsCard } from "./NewsCard";
 
 export default function NewsFeed() {
@@ -23,7 +22,6 @@ export default function NewsFeed() {
 
   return (
     <>
-      <NewsHeader />
       <Container sx={{ pt: 12, pb: 4 }}>
         {loading && articles.length === 0 ? (
           <Box display="flex" justifyContent="center" my={4}>

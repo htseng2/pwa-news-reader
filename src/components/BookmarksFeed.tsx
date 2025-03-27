@@ -1,4 +1,4 @@
-import { Container, Grid, Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import { NewsCard } from "./NewsCard";
 import { useBookmarks } from "../hooks/useBookmarks";
 
@@ -6,7 +6,7 @@ export default function BookmarksFeed() {
   const { bookmarks } = useBookmarks();
 
   return (
-    <Container sx={{ pt: 12, pb: 4 }}>
+    <>
       <Typography variant="h4" gutterBottom sx={{ mb: 4 }}>
         Saved Articles ({bookmarks.length})
       </Typography>
@@ -20,6 +20,6 @@ export default function BookmarksFeed() {
           No bookmarked articles yet. Start saving stories from the main feed!
         </Typography>
       )}
-    </Container>
+    </>
   );
 }

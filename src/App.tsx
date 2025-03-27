@@ -3,6 +3,8 @@ import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import NewsFeed from "./components/NewsFeed";
 import { BookmarksProvider } from "./contexts/BookmarksContext";
 import BookmarksFeed from "./components/BookmarksFeed";
+import { Container } from "@mui/material";
+import { NewsHeader } from "./components/NewsHeader";
 
 // Define TypeScript interface for news articles
 export interface NewsArticle {
@@ -34,10 +36,13 @@ function App() {
 
   return (
     <BookmarksProvider>
-      <Routes>
-        <Route path="/" element={<NewsFeed />} />
-        <Route path="/bookmarks" element={<BookmarksFeed />} />
-      </Routes>
+      <NewsHeader />
+      <Container component="main" sx={{ pt: 12, pb: 4 }}>
+        <Routes>
+          <Route path="/" element={<NewsFeed />} />
+          <Route path="/bookmarks" element={<BookmarksFeed />} />
+        </Routes>
+      </Container>
     </BookmarksProvider>
   );
 }
