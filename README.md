@@ -1,54 +1,68 @@
-# React + TypeScript + Vite
+# PWA News Reader 📰
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Available-success)](https://htseng2.github.io/pwa-news-reader/)
+![React](https://img.shields.io/badge/React-19.0.0-blue.svg)
+![Vite](https://img.shields.io/badge/Vite-6.2.0-orange.svg)
 
-Currently, two official plugins are available:
+A Progressive Web App (PWA) news reader with offline capabilities and bookmarking features.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+➡️ **Live Demo:** https://htseng2.github.io/pwa-news-reader/
 
-## Expanding the ESLint configuration
+## Features
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- 📰 News feed with infinite scroll
+- 🔖 Bookmark articles for offline reading
+- ⚡ PWA installation support
+- 📶 Offline-first caching strategy
+- 🎨 Material UI design system
+- 🔄 Service worker precaching
+- 🚀 Vite-powered build system
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## Installation
+
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Scripts
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+```bash
+# Start development server
+npm run dev
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
+
+# Lint code
+npm run lint
 ```
+
+## Tech Stack
+
+- [React 19](https://react.dev/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Vite](https://vitejs.dev/)
+- [Material UI](https://mui.com/)
+- [Workbox](https://developer.chrome.com/docs/workbox/)
+- [The News API](https://www.thenewsapi.com/)
+
+## Deployment
+
+Configured for GitHub Pages deployment:
+
+1. Production builds output to `/docs` directory
+2. GitHub Pages set to serve from `docs/` folder
+3. Automatic 404 handling for SPA routing
+4. Service worker registered with proper scope
+
+## Configuration
+
+Key configuration files:
+
+- `vite.config.ts` - Base path and Workbox setup
+- `src/service-worker.js` - Precaching strategies
+- `public/404.html` - SPA routing fallback
